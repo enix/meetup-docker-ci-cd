@@ -2,30 +2,39 @@
 	<head>
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/white.css">
+		<link rel="stylesheet" href="enix.css">
 	</head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
 				<section data-markdown>
 					<textarea data-template>
-						## Page title
+						![docker](docker.svg) <!-- .element: class="logo docker" -->
+						![gitlab](gitlab.svg) <!-- .element: class="logo gitlab" -->
 
-						Mettre en place une CI et un CD en moins de 10mn grace à Gitlab et Docker
+						Mettre en place une **intégration continue** et un **déploiement continu** en moins de 10mn grace à **Gitlab** et **Docker**
+
+						<small>Alexandre Buisine [@alexbuisine](https://twitter.com/alexbuisine)</small>
+
+						![enix](enix.svg) <!-- .element: class="logo enix" -->
 					</textarea>
 				</section>
 				<section data-markdown>
 					<textarea data-template>
-						Les ingrédients de la recette
+						# Les ingrédients
 						* Docker *[docker.com](https://www.docker.com/)*
 						* Gitlab *[gitlab.com](https://about.gitlab.com/product/)*
 						* Intégration continue *[Wikipédia](https://fr.wikipedia.org/wiki/Int%C3%A9gration_continue)*
 						* Déploiement continu *[Wikipédia](https://fr.wikipedia.org/wiki/Livraison_continue)*
-						* Un projet à passer en CI/CD ! <!-- .element: class="fragment" -->
+						* <!-- .element: class="fragment" -->  et un **projet** à passer en CI/CD ! 
 					</textarea>
 				</section>
 				<section data-markdown>
 					<textarea data-template>
-						Exemple d'application web simple : cette présentation en html
+						# L'exemple du jour
+						Cette présentation est disponible sur github
+						utilise le framework **[revealjs](https://revealjs.com/)**
+
 						Hypothèse vous avez déjà mis en container votre application
 						ex Dockerfile
 					</textarea>
@@ -76,7 +85,9 @@
 		<script src="plugin/markdown/marked.js"></script>
 		<script src="plugin/markdown/markdown.js"></script>
 		<script>
-			Reveal.initialize();
+			Reveal.initialize({
+				history: true
+			});
 		</script>
 	</body>
 </html>

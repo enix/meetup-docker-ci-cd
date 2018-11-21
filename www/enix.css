@@ -1,0 +1,49 @@
+@import url(https://fonts.googleapis.com/css?family=Poppins:300,400,500,600);
+
+.reveal,
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+  font-family: "Poppins", sans-serif !important;
+  font-weight: lighter !important; }
+
+.reveal h1 { font-size: 1.5em; }
+
+.reveal a {
+  color: #377DFF;
+  text-decoration: none;
+  -webkit-transition: color .15s ease;
+  -moz-transition: color .15s ease;
+  transition: color .15s ease; }
+
+.reveal section img.logo {
+	border: 0px;
+	box-shadow: none;
+	margin-left: 25px;
+	margin-right: 25px; }
+
+img.logo.docker { width: 19%; }
+img.logo.gitlab { width: 15%; }
+img.logo.enix { width: 18%; margin-top: 0px; }
+
+small { width: 100%; }
+
+strong,
+.reveal .controls { color: #377DFF; }
+
+
+
+
+
+/*.reveal > .slides > section:first-child {
+  background-image: url("enix-domain.svg");
+  background-position: 50% 5%;
+  background-repeat: no-repeat;
+  background-size: 10%;
+}*/
+
+/*  color: #333;
+  font-size: 40px;*/
