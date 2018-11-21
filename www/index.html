@@ -2,6 +2,7 @@
 	<head>
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/white.css">
+		<link rel="stylesheet" href="lib/css/zenburn.css">
 		<link rel="stylesheet" href="enix.css">
 	</head>
 	<body>
@@ -32,24 +33,68 @@
 				<section data-markdown>
 					<textarea data-template>
 						# L'exemple du jour
-						Cette présentation est disponible sur github
-						utilise le framework **[revealjs](https://revealjs.com/)**
+						* cette présentation est disponible sur [github](https://github.com/enix/meetup-docker-ci-cd)
+						* elle utilise le framework [revealjs](https://revealjs.com/)
+						* c'est parfait pour ce qui va suivre
+					</textarea>
+				</section>
+				<section data-markdown>
+					<textarea data-template>
+						On prend l'hypothèse que l'application est déjà en conteneur
+```Dockerfile
+FROM node:8
 
-						Hypothèse vous avez déjà mis en container votre application
-						ex Dockerfile
+EXPOSE 8000
+
+WORKDIR /
+RUN git clone --depth 1 https://github.com/hakimel/reveal.js.git
+
+WORKDIR /reveal.js
+ENV NPM_CONFIG_LOGLEVEL info
+RUN npm install
+
+COPY www/ ./
+
+CMD ["npm", "start"]
+```
 					</textarea>
 				</section>
 				<section data-markdown>
 					<textarea data-template>
-						Le plan A
-						Workflow avec image
+						Le **build** _aka la mise en conteneur_
+
+						dans le principe ca donne ca
+```yaml
+stages:
+  - build
+
+job_build_a_la_sauce_docker:
+  stage: build
+  script:
+    - docker build -t 
+    - docker push
+```
 					</textarea>
 				</section>
 				<section data-markdown>
 					<textarea data-template>
-						Build
-						lien github
-						astuce
+						Le **build** _aka la mise en conteneur_
+
+						dans les faits c'est plutot ca
+```yaml
+image: docker:latest
+
+stages:
+  - build
+
+job_build_a_la_sauce_docker:
+  stage: build
+  script:
+    - docker info
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t 
+    - docker push
+```
 					</textarea>
 				</section>
 				<section data-markdown>
@@ -81,12 +126,16 @@
 
 			</div>
 		</div>
+		<script src="lib/js/head.min.js"></script>
 		<script src="js/reveal.js"></script>
-		<script src="plugin/markdown/marked.js"></script>
-		<script src="plugin/markdown/markdown.js"></script>
 		<script>
 			Reveal.initialize({
-				history: true
+				history: true,
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+					]
 			});
 		</script>
 	</body>
