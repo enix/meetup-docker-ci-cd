@@ -25,6 +25,11 @@
 	margin-left: 25px;
 	margin-right: 25px; }
 
+.reveal code {
+  font-size: 20px;
+  line-height: 20px;
+}
+
 img.logo.docker { width: 19%; }
 img.logo.gitlab { width: 15%; }
 img.logo.enix { width: 18%; margin-top: 0px; }

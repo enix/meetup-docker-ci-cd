@@ -34,7 +34,7 @@
 					<textarea data-template>
 						# L'exemple du jour
 						* cette présentation est disponible sur [github](https://github.com/enix/meetup-docker-ci-cd)
-						* elle utilise le framework [revealjs](https://revealjs.com/)
+						* elle utilise le framework [reveal.js](https://revealjs.com/)
 						* c'est parfait pour ce qui va suivre
 					</textarea>
 				</section>
@@ -57,11 +57,19 @@ COPY www/ ./
 
 CMD ["npm", "start"]
 ```
+						<small>* il est bien simple ce [Dockerfile](https://docs.docker.com/engine/reference/builder/#parser-directives)</small>
 					</textarea>
 				</section>
 				<section data-markdown>
 					<textarea data-template>
-						Le **build** _aka la mise en conteneur_
+						# Idéalement
+
+						FIXME frise gitlab here
+					</textarea>
+				</section>
+				<section data-markdown>
+					<textarea data-template>
+						Le **build** aka _la mise en conteneur_
 
 						dans le principe ca donne ca
 ```yaml
@@ -71,14 +79,15 @@ stages:
 job_build_a_la_sauce_docker:
   stage: build
   script:
-    - docker build -t 
-    - docker push
+    - docker build -t meetup-docker-ci-cd .
+    - docker push meetup-docker-ci-cd
 ```
+						<small>\* dans un beau [.gitlab-ci.yml](https://docs.gitlab.com/ee/ci/yaml/) à la racine du projet</small>
 					</textarea>
 				</section>
 				<section data-markdown>
 					<textarea data-template>
-						Le **build** _aka la mise en conteneur_
+						Le **build** aka _la mise en conteneur_
 
 						dans les faits c'est plutot ca
 ```yaml
@@ -87,14 +96,29 @@ image: docker:latest
 stages:
   - build
 
+variables:
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+
 job_build_a_la_sauce_docker:
   stage: build
   script:
     - docker info
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker build -t 
-    - docker push
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
 ```
+						<small>\* attention aux collisions de tag sur la registry</small>
+						<small>\* [les variables d'environnement possibles](https://docs.gitlab.com/ee/ci/variables/#predefined-variables-environment-variables)</small>
+					</textarea>
+				</section>
+				<section data-markdown>
+					<textarea data-template>
+						# Si tout s'est bien passé
+						sur gitlab on va avoir
+						![job gitlab](gitlab-job.png)
+
+						et sur slack par exemple
+						![notification slack](slack-notification.png)
 					</textarea>
 				</section>
 				<section data-markdown>
@@ -113,17 +137,31 @@ job_build_a_la_sauce_docker:
 				</section>
 				<section data-markdown>
 					<textarea data-template>
-						Autre lien à regarder
+						Autres lien à regarder
+						Github actions
 					</textarea>
 				</section>
 				<section data-markdown>
 					<textarea data-template>
-						Offre enix
-						formation Kube
-						formation Docker
+						Si vous avez **besoin** de ce genre de système mais que vous n'avez **pas le temps** ou ne **savez pas** trop comment vous y prendre,
+
+						[Enix](https://enix.io/fr/contact/) peut le faire pour vous.
 					</textarea>
 				</section>
-
+				<section data-markdown>
+					<textarea data-template>
+						Pour [monter en compétence](https://enix.io/fr/services/formation/bien-demarrer-avec-les-conteneurs/) sur [Docker](https://enix.io/fr/services/formation/bien-demarrer-avec-les-conteneurs/),<br>
+						2 jours les 7 et 8 Janvier à Paris.
+						
+						Et pour les ceintures noires en conteneurs,<br>
+						[devenez expert en orchestration](https://enix.io/fr/services/formation/deployer-ses-applications-avec-kubernetes/) sur [Kubernetes](https://enix.io/fr/services/formation/deployer-ses-applications-avec-kubernetes/) les 17 et 18 décembre à Paris.
+						<small>\* il reste peu de places !</small>
+						<br>
+						<br>
+						<small>[formation@enix.io](formation@enix.io)</small>
+						![enix](enix.svg) <!-- .element: class="logo enix" -->
+					</textarea>
+				</section>
 			</div>
 		</div>
 		<script src="lib/js/head.min.js"></script>
