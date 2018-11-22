@@ -5,6 +5,3 @@ services:
     build: .
     ports:
     - "8000:8000"
-    volumes:
-    - "./www/index.html:/reveal.js/index.html"
-    - "./www/enix.css:/reveal.js/enix.css"

@@ -1,0 +1,6 @@
+version: '3'
+services:
+  myproject:
+    volumes:
+    - "./www/index.html:/reveal.js/index.html"
+    - "./www/enix.css:/reveal.js/enix.css"
