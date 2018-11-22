@@ -1,5 +1,7 @@
+<!DOCTYPE html>
 <html>
 	<head>
+		<title>enix.io - CI et CD en 10mn avec Gitlab et Docker</title>
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/white.css">
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -123,11 +125,51 @@ job_build_a_la_sauce_docker:
 				</section>
 				<section data-markdown>
 					<textarea data-template>
-						Test
-						lien github
-						astuce
+						Passons au test
+```yaml
+image: docker:latest
+
+stages:
+  - build
+  - test
+
+variables:
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+
+job_build_a_la_sauce_docker:
+  stage: build
+  before_script:
+    - docker info
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+
+htmlvalidator:
+  stage: test
+  before_script:
+    - docker info
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - docker run --rm -v /www:/www $IMAGE_TAG cp -r /reveal.js/ -T /www
+    - docker run --rm -v /www:/www validator/validator java -jar ./vnu.jar --skip-non-html --errors-only /www/index.html
+```
+						<small>\* [validator/validator](https://hub.docker.com/r/validator/validator/) ou autrement dit "The Nu Html Checker"</small>
 					</textarea>
 				</section>
+				<section data-markdown>
+					<textarea data-template>
+						# Si tout s'est bien passé
+						on va avoir une belle erreur
+						![pipeline gitlab en erreur](gitlab-pipeline-failed.png)
+
+						qui nous dit
+						![erreur](gitlab-job-output.png)
+					</textarea>
+				</section>
+
+
+
 				<section data-markdown>
 					<textarea data-template>
 						Deploy
