@@ -28,6 +28,7 @@ job_htmlvalidator:
 
 job_deploy_sur_kubernetes:
   stage: deploy
+  before_script:
+    - curl -L https://storage.googleapis.com/kubernetes-release/release/v1.12.2/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl
   script:
-    - echo $KUBE_URL
-    - cat $KUBECONFIG
+    - kubectl get nodes
