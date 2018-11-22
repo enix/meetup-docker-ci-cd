@@ -2,6 +2,7 @@ image: docker:latest
 
 stages:
   - build
+  - test
 
 variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
@@ -13,3 +14,10 @@ job_build_a_la_sauce_docker:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
+
+htmlvalidator:
+  stage: test
+  script:
+    - docker run --rm -d -p 8000:8000 $IMAGE_TAG
+    - docker run --rm validator/validator java -jar ./vnu.jar --skip-non-html --errors-only http://localhost:8000
+    - docker ps -a
