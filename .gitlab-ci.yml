@@ -18,6 +18,7 @@ job_build_a_la_sauce_docker:
 htmlvalidator:
   stage: test
   script:
+    - docker ps -a
     - docker run --rm -d -p 8000:8000 $IMAGE_TAG
     - docker run --rm validator/validator java -jar ./vnu.jar --skip-non-html --errors-only http://localhost:8000
     - docker ps -a
