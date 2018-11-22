@@ -1,4 +1,4 @@
-image: docker:latest
+image: docker:stable
 
 stages:
   - build
@@ -29,4 +29,5 @@ job_htmlvalidator:
 job_deploy_sur_kubernetes:
   stage: deploy
   script:
-    - kubectl get nodes
+    - echo $KUBE_URL
+    - cat $KUBECONFIG
