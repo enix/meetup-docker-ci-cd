@@ -9,16 +9,18 @@ variables:
 
 job_build_a_la_sauce_docker:
   stage: build
-  script:
+  before_script:
     - docker info
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
 
 htmlvalidator:
   stage: test
+  before_script:
+    - docker info
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
-    - docker ps -a
-    - docker run --rm -d -p 8000:8000 $IMAGE_TAG
-    - docker run --rm validator/validator java -jar ./vnu.jar --skip-non-html --errors-only http://localhost:8000
-    - docker ps -a
+    - docker run --rm -v /websitefiles:/websitefiles $IMAGE_TAG cp -r /reveal.js /websitefiles
+    - docker run --rm -v /websitefiles:/websitefiles validator/validator java -jar ./vnu.jar --skip-non-html --errors-only /websitefiles
