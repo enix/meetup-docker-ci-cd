@@ -3,6 +3,7 @@ image: docker:latest
 stages:
   - build
   - test
+  - deploy
 
 variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
@@ -16,7 +17,7 @@ job_build_a_la_sauce_docker:
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
 
-htmlvalidator:
+job_htmlvalidator:
   stage: test
   before_script:
     - docker info
@@ -24,3 +25,8 @@ htmlvalidator:
   script:
     - docker run --rm -v /www:/www $IMAGE_TAG cp -r /reveal.js/ -T /www
     - docker run --rm -v /www:/www validator/validator java -jar ./vnu.jar --skip-non-html --errors-only /www/index.html
+
+job_deploy_sur_kubernetes:
+  stage: deploy
+  script:
+    - kubectl get nodes
