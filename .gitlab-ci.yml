@@ -22,5 +22,6 @@ htmlvalidator:
     - docker info
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
-    - docker run --rm -v /websitefiles:/websitefiles $IMAGE_TAG cp -r /reveal.js /websitefiles
+    - docker run --rm -v /websitefiles:/websitefiles $IMAGE_TAG cp -r /reveal.js/ /websitefiles
+    - ls /websitefiles
     - docker run --rm -v /websitefiles:/websitefiles validator/validator java -jar ./vnu.jar --skip-non-html --errors-only /websitefiles/index.html
