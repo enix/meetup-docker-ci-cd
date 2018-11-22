@@ -29,6 +29,9 @@
   font-size: 20px;
   line-height: 20px;
 }
+.reveal pre code {
+  max-height: 425px;
+}
 
 img.logo.docker { width: 19%; }
 img.logo.gitlab { width: 15%; }

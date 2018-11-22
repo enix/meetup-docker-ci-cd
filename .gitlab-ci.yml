@@ -1,4 +1,4 @@
-image: docker:stable
+image: enix/docker-compose:latest
 
 stages:
   - build
@@ -26,9 +26,18 @@ job_htmlvalidator:
     - docker run --rm -v /www:/www $IMAGE_TAG cp -r /reveal.js/ -T /www
     - docker run --rm -v /www:/www validator/validator java -jar ./vnu.jar --skip-non-html --errors-only /www/index.html
 
-job_deploy_sur_kubernetes:
+job_docker_compose_deploy:
   stage: deploy
-  before_script:
-    - curl -L https://storage.googleapis.com/kubernetes-release/release/v1.12.2/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl
+  only:
+    - production
   script:
-    - kubectl get nodes
+    - docker version
+    - apk add --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - ssh -o StrictHostKeyChecking=no -nNT -L /tmp/docker-remote.sock:/var/run/docker.sock -f root@$DEPLOY_HOST
+    - export DOCKER_HOST="unix:///tmp/docker-remote.sock"
+    - docker version
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker-compose pull
+    - docker-compose up -d

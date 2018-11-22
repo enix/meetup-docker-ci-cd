@@ -1,7 +1,12 @@
 version: '3'
 services:
-  myproject:
-    image: meetup-docker-ci-cd
+  www:
+    image: ${IMAGE_TAG:-meetup-docker-ci-cd}
     build: .
+    restart: always
     ports:
-    - "8000:8000"
+    - "80:8000"
+  # https:
+  #   image: nginx
+  #   ports:
+  #   - "443:443"

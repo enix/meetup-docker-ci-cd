@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="UTF-8">
 		<title>enix.io - CI et CD en 10mn avec Gitlab et Docker</title>
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/white.css">
@@ -34,10 +35,12 @@
 				</section>
 				<section data-markdown>
 					<textarea data-template>
-						# L'exemple du jour
-						* cette présentation est disponible sur [github](https://github.com/enix/meetup-docker-ci-cd)
+						# Le projet du jour
+						* cette présentation est disponible sur [github](https://github.com/enix/meetup-docker-ci-cd) et https://meetup-docker-ci-cd.enix.io
 						* elle utilise le framework [reveal.js](https://revealjs.com/)
-						* c'est parfait pour ce qui va suivre
+
+						![qr code](qr-meetup-docker-ci-cd.svg) <!-- .element: class="logo" -->
+						<small>\> c'est parfait pour ce qui va suivre</small>
 					</textarea>
 				</section>
 				<section data-markdown>
@@ -59,14 +62,14 @@ COPY www/ ./
 
 CMD ["npm", "start"]
 ```
-						<small>* il est bien simple ce [Dockerfile](https://docs.docker.com/engine/reference/builder/#parser-directives)</small>
+						<small>\> il est bien simple ce [Dockerfile](https://docs.docker.com/engine/reference/builder/#parser-directives)</small>
 					</textarea>
 				</section>
 				<section data-markdown>
 					<textarea data-template>
 						# Idéalement
 
-						FIXME frise gitlab here
+						**build** > **test** <!-- .element: class="fragment" --> > **deploy** <!-- .element: class="fragment" --> > **apéro** <!-- .element: class="fragment" -->
 					</textarea>
 				</section>
 				<section data-markdown>
@@ -84,14 +87,14 @@ job_build_a_la_sauce_docker:
     - docker build -t meetup-docker-ci-cd .
     - docker push meetup-docker-ci-cd
 ```
-						<small>\* dans un beau [.gitlab-ci.yml](https://docs.gitlab.com/ee/ci/yaml/) à la racine du projet</small>
+						<small>\> dans un beau [.gitlab-ci.yml](https://docs.gitlab.com/ee/ci/yaml/) à la racine du projet</small>
 					</textarea>
 				</section>
 				<section data-markdown>
 					<textarea data-template>
 						Le **build** aka _la mise en conteneur_
 
-						dans les faits c'est plutot ca
+						dans les faits c'est plutôt ca
 ```yaml
 image: docker:latest
 
@@ -109,8 +112,8 @@ job_build_a_la_sauce_docker:
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
 ```
-						<small>\* attention aux collisions de tag sur la registry</small>
-						<small>\* [les variables d'environnement possibles](https://docs.gitlab.com/ee/ci/variables/#predefined-variables-environment-variables)</small>
+						<small>\> attention aux collisions de tag sur la registry</small>
+						<small>\> les [variables d'environnement](https://docs.gitlab.com/ee/ci/variables/#predefined-variables-environment-variables) possibles</small>
 					</textarea>
 				</section>
 				<section data-markdown>
@@ -125,7 +128,7 @@ job_build_a_la_sauce_docker:
 				</section>
 				<section data-markdown>
 					<textarea data-template>
-						Passons au test
+						Passons au **test**
 ```yaml
 image: docker:latest
 
@@ -137,13 +140,7 @@ variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
 
 job_build_a_la_sauce_docker:
-  stage: build
-  before_script:
-    - docker info
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-  script:
-    - docker build -t $IMAGE_TAG .
-    - docker push $IMAGE_TAG
+  ...
 
 htmlvalidator:
   stage: test
@@ -151,36 +148,81 @@ htmlvalidator:
     - docker info
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
-    - docker run --rm -v /www:/www $IMAGE_TAG cp -r /reveal.js/ -T /www
-    - docker run --rm -v /www:/www validator/validator java -jar ./vnu.jar --skip-non-html --errors-only /www/index.html
+    - docker run --rm -v /www:/www $IMAGE_TAG \
+      cp -r /reveal.js/ -T /www
+    - docker run --rm -v /www:/www validator/validator \
+      java -jar ./vnu.jar --skip-non-html --errors-only /www/index.html
 ```
-						<small>\* [validator/validator](https://hub.docker.com/r/validator/validator/) ou autrement dit "The Nu Html Checker"</small>
+						<small>\> [validator/validator](https://hub.docker.com/r/validator/validator/) ou autrement dit "The Nu Html Checker"</small>
 					</textarea>
 				</section>
 				<section data-markdown>
 					<textarea data-template>
 						# Si tout s'est bien passé
-						on va avoir une belle erreur
+						on va avoir une belle **erreur**
 						![pipeline gitlab en erreur](gitlab-pipeline-failed.png)
 
-						qui nous dit
+						dans le détail
 						![erreur](gitlab-job-output.png)
 					</textarea>
 				</section>
-
-
-
 				<section data-markdown>
 					<textarea data-template>
-						Deploy
-						lien github
-						astuce
+						faire une **stack** applicative avec **docker-compose**
+
+```yaml
+version: '3'
+services:
+  www:
+    image: meetup-docker-ci-cd
+    # image: ${IMAGE_TAG:-meetup-docker-ci-cd}
+    build: .
+  loadbalancer:
+	image: nginx
+	ports:
+	- "80:80"
+	- "443:443"
+```
+						<small>\> il vous faut le [binaire](https://github.com/docker/compose/releases) et un fichier de configuration [yaml](https://docs.docker.com/compose/compose-file/)</small>
+						<small>\> le loadbalancer ne suffit pas ! **grunt serve** ne doit pas être utilisé en production</small>
 					</textarea>
 				</section>
 				<section data-markdown>
 					<textarea data-template>
-						Autres lien à regarder
-						Github actions
+						 **deploy** à la sauce docker-compose
+```yaml
+stages:
+  - build
+  - test
+  - deploy
+
+[...]
+
+job_docker_compose_deploy:
+  stage: deploy
+  only:
+    - production
+  script:
+    - export DOCKER_HOST="tcp://<mon_host_docker>:2375"
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker-compose pull
+    - docker-compose up -d
+```
+						<small>\> c'est la version à la mano mais il existe beaucoup d'outils pour **orchestrer** vos conteneurs</small>
+					</textarea>
+				</section>
+				<section data-markdown>
+					<textarea data-template>
+						# et voilà
+						![success](gitlab-tada.png)
+					</textarea>
+				</section>
+				<section data-markdown>
+					<textarea data-template>
+						# Quelques sujets connexes
+						* Github [actions](https://github.com/features/actions)
+						* _automations_ avec [Jenkins](https://jenkins.io/)
+						* orchestration sur [Kubernetes](https://kubernetes.io/)
 					</textarea>
 				</section>
 				<section data-markdown>
@@ -197,7 +239,7 @@ htmlvalidator:
 						
 						Et pour les ceintures noires en conteneurs,<br>
 						[devenez expert en orchestration](https://enix.io/fr/services/formation/deployer-ses-applications-avec-kubernetes/) sur [Kubernetes](https://enix.io/fr/services/formation/deployer-ses-applications-avec-kubernetes/) les 17 et 18 décembre à Paris.
-						<small>\* il reste peu de places !</small>
+						<small>\> il reste peu de places !</small>
 						<br>
 						<br>
 						<small>[formation@enix.io](formation@enix.io)</small>
