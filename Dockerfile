@@ -1,4 +1,4 @@
-FROM node:8
+FROM node:8 as develop
 
 EXPOSE 8000
 
@@ -12,3 +12,9 @@ RUN npm install
 COPY www/ ./
 
 CMD ["npm", "start"]
+
+FROM nginx
+
+EXPOSE 5000
+
+COPY --from=develop /reveal.js /usr/share/nginx/html

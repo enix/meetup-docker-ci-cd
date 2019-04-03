@@ -1,12 +1,11 @@
-version: '3'
+version: '3.4'
 services:
   www:
     image: ${IMAGE_TAG:-meetup-docker-ci-cd}
-    build: .
+    build:
+      context: .
+      target: develop
     restart: always
-    ports:
-    - "80:8000"
-  # https:
-  #   image: nginx
-  #   ports:
-  #   - "443:443"
+    volumes:
+    - "./www/index.html:/reveal.js/index.html"
+    - "./www/enix.css:/reveal.js/enix.css"

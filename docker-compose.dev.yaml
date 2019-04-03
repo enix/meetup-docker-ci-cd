@@ -1,6 +1,0 @@
-version: '3'
-services:
-  www:
-    volumes:
-    - "./www/index.html:/reveal.js/index.html"
-    - "./www/enix.css:/reveal.js/enix.css"
