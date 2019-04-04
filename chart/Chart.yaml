@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A simple static website
+name: static-website
+version: 0.0.1
