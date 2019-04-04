@@ -17,8 +17,8 @@ application:
   secretName:
   secretChecksum:
 gitlab:
-  app:
-  env:
+  app: truc
+  env: machin
 service:
   enabled: true
   annotations: {}
