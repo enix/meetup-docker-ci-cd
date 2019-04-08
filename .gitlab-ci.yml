@@ -5,7 +5,6 @@ stages:
 build:
   stage: build
   image: docker:18.06-dind
-  pull_policy: if-not-present
   variables:
     IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   script:
@@ -20,7 +19,6 @@ production:
     refs:
       - master
   image: dtzar/helm-kubectl:2.13.1
-  pull_policy: if-not-present
   script:
     - kubectl get nodes
     - helm list
