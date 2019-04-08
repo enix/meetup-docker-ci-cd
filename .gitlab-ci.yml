@@ -26,4 +26,4 @@ production:
   script:
     - kubectl version
     - helm version
-    - helm upgrade --install --set image=$IMAGE_TAG $CI_PROJECT_NAME chart/
+    - helm upgrade --install --wait --set image=$IMAGE_TAG $CI_PROJECT_NAME chart/
