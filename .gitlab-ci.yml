@@ -20,4 +20,5 @@ production:
       - master
   image: dtzar/helm-kubectl:2.13.1
   script:
+    - kubectl get nodes
     - helm list
