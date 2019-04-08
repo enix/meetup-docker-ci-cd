@@ -5,6 +5,8 @@ services:
     build:
       context: .
       target: develop
+    ports:
+    - 8000:8000
     restart: always
     volumes:
     - "./www/index.html:/reveal.js/index.html"
