@@ -4,7 +4,7 @@ stages:
 
 build:
   stage: build
-  image: docker:18.06-dind
+  image: docker:stable-dind
   variables:
     IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   script:
@@ -15,6 +15,9 @@ build:
 
 production:
   stage: deploy
+  environment:
+    name: production
+    url: https://meetup-docker-ci-cd.slides.enix.io
   only:
     refs:
       - master
