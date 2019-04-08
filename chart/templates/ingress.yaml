@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    certmanager.k8s.io/cluster-issuer: {{ .Values.certificate.clusterIssuer }}
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  rules:
+  - host: {{ .Release.Name }}.{{ .Values.ingressBaseDomain }}
+    http:
+      paths:
+      - backend:
+          serviceName: {{ .Release.Name }}
+          servicePort: 80
+  tls:
+  - hosts:
+    - {{ .Release.Name }}.{{ .Values.ingressBaseDomain }}
+    secretName: {{ .Release.Name }}-cert

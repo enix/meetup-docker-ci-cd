@@ -1,4 +1,5 @@
 image:
 imagePullSecret:
-  postfix: private-repository
-  value:
+certificate:
+  clusterIssuer: letsencrypt-prod
+ingressBaseDomain:

@@ -29,4 +29,4 @@ production:
     - kubectl version
     - helm version
     - export DOCKER_REGISTRY_SECRET=$(kubectl create secret -n slides-enix-io docker-registry bla --docker-server=$CI_REGISTRY --docker-username="${CI_DEPLOY_USER}" --docker-password="${CI_DEPLOY_PASSWORD}" -o json --dry-run | jq '.data.".dockerconfigjson"')
-    - helm upgrade --install --wait --set image=$IMAGE_TAG $CI_PROJECT_NAME --set imagePullSecret.value="$DOCKER_REGISTRY_SECRET" chart/
+    - helm upgrade --install --wait --set image=$IMAGE_TAG $CI_PROJECT_NAME --set ingressBaseDomain=$KUBE_INGRESS_BASE_DOMAIN --set imagePullSecret="$DOCKER_REGISTRY_SECRET" chart/
