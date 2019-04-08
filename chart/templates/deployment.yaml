@@ -1,3 +1,12 @@
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/dockerconfigjson
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.imagePullSecret.postfix }}
+  namespace: {{ .Release.Namespace }}
+data:
+  .dockerconfigjson: {{ .Values.imagePullSecret.value }}
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -19,4 +28,4 @@ spec:
         imagePullPolicy: Always
         name: {{ .Release.Name }}
       imagePullSecrets:
-      - name: {{ .Release.Name }}-docker-registry-enix-io
+      - name: {{ .Release.Name }}-{{ .Values.imagePullSecret.postfix }}

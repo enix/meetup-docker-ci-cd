@@ -1,1 +1,4 @@
 image:
+imagePullSecret:
+  postfix: private-repository
+  value:
