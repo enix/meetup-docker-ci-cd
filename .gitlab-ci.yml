@@ -6,11 +6,10 @@ build:
   stage: build
   image: docker:stable-dind
   script:
-    - |
-    echo "Logging to GitLab Container Registry with CI credentials..."
-    docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-    docker build --tag "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG" .
-    docker push "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG"
+    - echo "Logging to GitLab Container Registry with CI credentials..."
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker build --tag "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG" .
+    - docker push "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG"
 
 production:
   stage: deploy
@@ -19,5 +18,4 @@ production:
       - master
   image: dtzar/helm-kubectl:2.13.1
   script:
-    - |
-    helm list
+    - helm list
