@@ -23,8 +23,6 @@ production:
       - master
   image: dtzar/helm-kubectl:2.13.1
   script:
-    - env
-    - kubectl config view
-    - kubectl --kubeconfig $KUBECONFIG get nodes
-    - kubectl get nodes
-    - helm list
+    - kubectl version
+    - helm version
+    - helm upgrade --install $CI_PROJECT_NAME chart/
