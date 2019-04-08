@@ -24,5 +24,7 @@ production:
   image: dtzar/helm-kubectl:2.13.1
   script:
     - env
-    - kubectl -f $KUBECONFIG get nodes
+    - kubectl config view
+    - kubectl --kubeconfig $KUBECONFIG get nodes
+    - kubectl get nodes
     - helm list
