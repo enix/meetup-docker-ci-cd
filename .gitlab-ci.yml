@@ -1,10 +1,11 @@
 stages:
   - build
+  - test
   - release
   - deploy
 
 variables:
-  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
 
 build:
   stage: build
@@ -22,20 +23,22 @@ sementic-release:
     - npm install --save-dev semantic-release @semantic-release/gitlab
   script:
     - npx semantic-release --ci
+  except:
+    - tags
 
-production:
+deploy-production:
   stage: deploy
   environment:
     name: production
     url: https://meetup-docker-ci-cd.slides.enix.io
   only:
     refs:
-      - master
+      - /^v([0-9]|[1-9][0-9]*)\.([0-9]|[1-9][0-9]*)\.([0-9]|[1-9][0-9]*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/
   image: dtzar/helm-kubectl:2.13.1
   before_script:
     - apk add --no-cache jq
     - kubectl version
     - helm version
   script:
-    - export DOCKER_REGISTRY_SECRET=$(kubectl create secret -n slides-enix-io docker-registry bla --docker-server=$CI_REGISTRY --docker-username="${CI_DEPLOY_USER}" --docker-password="${CI_DEPLOY_PASSWORD}" -o json --dry-run | jq '.data.".dockerconfigjson"')
+    - export DOCKER_REGISTRY_SECRET=$(kubectl create secret -n slides-enix-io docker-registry dummy --docker-server=$CI_REGISTRY --docker-username="${CI_DEPLOY_USER}" --docker-password="${CI_DEPLOY_PASSWORD}" -o json --dry-run | jq '.data.".dockerconfigjson"')
     - helm upgrade --install --wait --set image=$IMAGE_TAG $CI_PROJECT_NAME --set ingressBaseDomain=$KUBE_INGRESS_BASE_DOMAIN --set imagePullSecret="$DOCKER_REGISTRY_SECRET" chart/
