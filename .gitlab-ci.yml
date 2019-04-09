@@ -19,7 +19,7 @@ sementic-release:
   stage: release
   image: node:8
   script:
-    - npm install --save-dev sementic-release
+    - npm install --save-dev semantic-release
     - npx semantic-release
 
 production:
