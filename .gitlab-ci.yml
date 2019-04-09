@@ -19,7 +19,7 @@ sementic-release:
   stage: release
   image: node:8
   before_script:
-    - npm install --save-dev semantic-release
+    - npm install --save-dev semantic-release @semantic-release/gitlab
   script:
     - npx semantic-release --no-ci --dry-run
 
