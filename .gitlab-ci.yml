@@ -18,6 +18,9 @@ build:
 
 sementic-release:
   stage: release
+  environment:
+    name: production
+    url: https://meetup-docker-ci-cd.slides.enix.io
   image: node:8
   before_script:
     - npm install --save-dev semantic-release @semantic-release/gitlab
