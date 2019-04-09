@@ -1,3 +1,0 @@
-# HTML files
-- source: /www\/(.+?\.html)/ # source/index.html.haml
-  public: '\1' # index.html
