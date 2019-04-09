@@ -21,7 +21,7 @@ sementic-release:
   before_script:
     - npm install --save-dev semantic-release @semantic-release/gitlab
   script:
-    - npx semantic-release --no-ci --dry-run
+    - npx semantic-release --dry-run
 
 production:
   stage: deploy
