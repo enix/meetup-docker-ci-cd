@@ -16,11 +16,9 @@ build:
     - docker build --tag $IMAGE_TAG .
     - docker push $IMAGE_TAG
 
-sementic-release:
+semantic-release:
   stage: release
-  image: node:8
-  before_script:
-    - npm install --save-dev semantic-release @semantic-release/gitlab
+  image: enix/semantic-release:gitlab
   script:
     - npx semantic-release --ci
   except:
