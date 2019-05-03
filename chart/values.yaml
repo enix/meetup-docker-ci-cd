@@ -1,6 +1,0 @@
-image:
-imagePullSecret:
-certificate:
-  clusterIssuer: letsencrypt-prod
-ingressBaseDomain:
-ingressClass: slides-enix-io

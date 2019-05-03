@@ -1,9 +1,0 @@
-.DS_Store
-# Common VCS dirs
-.git/
-.gitignore
-# Common backup files
-*.swp
-*.bak
-*.tmp
-*~

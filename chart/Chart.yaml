@@ -1,5 +1,0 @@
-apiVersion: v1
-description: A simple static website with pretty javascript transitions
-name: revealjs
-version: 0.0.1
-appVersion: 0.0.1
