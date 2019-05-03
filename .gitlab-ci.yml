@@ -44,7 +44,7 @@ deploy-production:
     - helm version
   script:
     - >
-      sed -i \"s/appVersion: 0.0.1/appVersion: $HELM_CHART_APPVERSION/\" chart/Chart.yaml
+      sed -i "s/appVersion: 0.0.1/appVersion: $HELM_CHART_APPVERSION/" chart/Chart.yaml
     - >
       export DOCKER_REGISTRY_SECRET=$(kubectl -n slides-enix-io
       create secret docker-registry dummy
