@@ -19,10 +19,12 @@ build:
 semantic-release:
   stage: release
   image: enix/semantic-release:gitlab
-  script:
-    - npx semantic-release --ci
+  only:
+    - master
   except:
     - tags
+  script:
+    - semantic-release --ci
 
 deploy-production:
   stage: deploy
