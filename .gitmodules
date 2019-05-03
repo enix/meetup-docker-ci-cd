@@ -1,3 +1,0 @@
-[submodule "chart"]
-	path = chart
-	url = https://gitlab.enix.io/helm-charts/revealjs.git
