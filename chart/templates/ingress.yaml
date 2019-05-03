@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   annotations:
     certmanager.k8s.io/cluster-issuer: {{ .Values.certificate.clusterIssuer }}
+    kubernetes.io/ingress.class: "{{ .Values.ingressClass }}"
+    ingress.kubernetes.io/ssl-redirect: "true"
   name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
 spec:
