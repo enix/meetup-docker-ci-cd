@@ -55,6 +55,7 @@ deploy-production:
       | jq '.data.".dockerconfigjson"')
     - >
       helm upgrade --install --wait $CI_PROJECT_NAME
+      --namespace $KUBE_NAMESPACE
       --set image.path=$CI_REGISTRY_IMAGE
       --set image.tag=$CI_COMMIT_REF_NAME
       --set image.pullSecret="$DOCKER_REGISTRY_SECRET"
